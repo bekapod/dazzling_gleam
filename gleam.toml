@@ -1,7 +1,7 @@
 name = "dazzling_gleam"
 version = "0.1.0"
 
-description = ""
+description = "The long awaited PokéAPI client for Gleam."
 licences = ["MIT"]
 repository = { type = "github", user = "bekapod", repo = "dazzling_gleam" }
 links = [{ title = "Repository", href = "https://github.com/bekapod/dazzling_gleam" }]
