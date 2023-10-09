@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 licences = ["MIT"]
 repository = { type = "github", user = "bekapod", repo = "dazzling_gleam" }
-# links = [{ title = "Website", href = "https://gleam.run" }]
+links = [{ title = "Repository", href = "https://github.com/bekapod/dazzling_gleam" }]
 
 [dependencies]
 gleam_stdlib = "~> 0.31"
