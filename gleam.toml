@@ -9,6 +9,8 @@ links = [{ title = "Repository", href = "https://github.com/bekapod/dazzling_gle
 [dependencies]
 gleam_stdlib = "~> 0.31"
 gleam_http = "~> 3.5"
+gleam_json = "~> 0.6"
 
 [dev-dependencies]
 gleeunit = "~> 0.10"
+simplifile = "~> 0.1"
