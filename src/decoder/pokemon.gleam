@@ -1,7 +1,7 @@
 import gleam/dynamic.{bool, field, int, list, optional, string}
 import gleam/json
 import gleam/option
-import decoder/resource.{Resource}
+import decoder/generic.{Resource}
 
 pub type PokemonAbility {
   PokemonAbility(ability: Resource, is_hidden: Bool, slot: Int)
@@ -22,11 +22,11 @@ pub type Pokemon {
 }
 
 pub fn decode(json_string: String) -> Result(Pokemon, json.DecodeError) {
-  let ability = resource.make_decoder()
+  let resource = generic.make_resource_decoder()
   let pokemon_ability =
     dynamic.decode3(
       PokemonAbility,
-      field("ability", of: ability),
+      field("ability", of: resource),
       field("is_hidden", of: bool),
       field("slot", of: int),
     )

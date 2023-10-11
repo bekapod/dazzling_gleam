@@ -1,8 +1,8 @@
 import gleeunit
 import gleeunit/should
 import gleam/option
+import decoder/generic
 import decoder/pokemon
-import decoder/resource
 import simplifile
 
 pub fn main() {
@@ -17,20 +17,17 @@ pub fn decode_jigglypuff_test() {
   jigglypuff.abilities
   |> should.equal([
     pokemon.PokemonAbility(
-      resource.Resource("cute-charm", "https://pokeapi.co/api/v2/ability/56/"),
+      generic.Resource("cute-charm", "https://pokeapi.co/api/v2/ability/56/"),
       False,
       1,
     ),
     pokemon.PokemonAbility(
-      resource.Resource("competitive", "https://pokeapi.co/api/v2/ability/172/"),
+      generic.Resource("competitive", "https://pokeapi.co/api/v2/ability/172/"),
       False,
       2,
     ),
     pokemon.PokemonAbility(
-      resource.Resource(
-        "friend-guard",
-        "https://pokeapi.co/api/v2/ability/132/",
-      ),
+      generic.Resource("friend-guard", "https://pokeapi.co/api/v2/ability/132/"),
       True,
       3,
     ),
