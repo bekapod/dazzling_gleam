@@ -2,6 +2,7 @@ import gleeunit
 import gleeunit/should
 import gleam/option
 import decoder/pokemon
+import decoder/resource
 import simplifile
 
 pub fn main() {
@@ -12,6 +13,28 @@ pub fn decode_jigglypuff_test() {
   let filepath = "./test/decoder/fixtures/pokemon/jigglypuff.json"
   let assert Ok(jigglypuff_json) = simplifile.read(filepath)
   let assert Ok(jigglypuff) = pokemon.decode(jigglypuff_json)
+
+  jigglypuff.abilities
+  |> should.equal([
+    pokemon.PokemonAbility(
+      resource.Resource("cute-charm", "https://pokeapi.co/api/v2/ability/56/"),
+      False,
+      1,
+    ),
+    pokemon.PokemonAbility(
+      resource.Resource("competitive", "https://pokeapi.co/api/v2/ability/172/"),
+      False,
+      2,
+    ),
+    pokemon.PokemonAbility(
+      resource.Resource(
+        "friend-guard",
+        "https://pokeapi.co/api/v2/ability/132/",
+      ),
+      True,
+      3,
+    ),
+  ])
 
   jigglypuff.base_experience
   |> should.equal(option.Some(95))
