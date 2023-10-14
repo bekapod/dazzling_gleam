@@ -9,11 +9,16 @@ pub type PokemonAbility {
   PokemonAbility(ability: Resource, is_hidden: Bool, slot: Int)
 }
 
+pub type PokemonGameIndex {
+  PokemonGameIndex(game_index: Int, version: Resource)
+}
+
 pub type Pokemon {
   Pokemon(
     abilities: List(PokemonAbility),
     base_experience: option.Option(Int),
     forms: List(Resource),
+    game_indices: List(PokemonGameIndex),
     height: Int,
     id: Int,
     is_default: Bool,
@@ -33,6 +38,13 @@ pub fn decode(json_string: String) -> Result(Pokemon, errors.DecodeError) {
       field("is_hidden", of: bool),
       field("slot", of: int),
     )
+  let pokemon_game_index =
+    dynamic.decode2(
+      PokemonGameIndex,
+      field("game_index", of: int),
+      field("version", of: resource),
+    )
+
   use dyn <- result.try(
     json.decode(json_string, dynamic.dynamic)
     |> result.map_error(fn(error) { errors.ParseError(error) }),
@@ -50,6 +62,11 @@ pub fn decode(json_string: String) -> Result(Pokemon, errors.DecodeError) {
   use forms <- result.try(
     dyn
     |> field("forms", of: list(resource))
+    |> result.map_error(with: fn(error) { errors.FieldErrors(error) }),
+  )
+  use game_indices <- result.try(
+    dyn
+    |> field("game_indices", of: list(pokemon_game_index))
     |> result.map_error(with: fn(error) { errors.FieldErrors(error) }),
   )
   use height <- result.try(
@@ -92,6 +109,7 @@ pub fn decode(json_string: String) -> Result(Pokemon, errors.DecodeError) {
     abilities: abilities,
     base_experience: base_experience,
     forms: forms,
+    game_indices: game_indices,
     height: height,
     id: id,
     is_default: is_default,

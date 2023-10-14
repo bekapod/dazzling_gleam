@@ -1,6 +1,7 @@
 import gleeunit
 import gleeunit/should
 import gleam/dynamic
+import gleam/list
 import gleam/json
 import gleam/option
 import decoder/errors
@@ -41,6 +42,15 @@ pub fn decode_jigglypuff_test() {
   |> should.equal([
     generic.Resource("jigglypuff", "https://pokeapi.co/api/v2/pokemon-form/39/"),
   ])
+  jigglypuff.game_indices
+  |> list.length
+  |> should.equal(20)
+  jigglypuff.game_indices
+  |> list.at(5)
+  |> should.equal(Ok(pokemon.PokemonGameIndex(
+    39,
+    generic.Resource("crystal", "https://pokeapi.co/api/v2/version/6/"),
+  )))
   jigglypuff.height
   |> should.equal(5)
   jigglypuff.id
@@ -89,6 +99,9 @@ pub fn decode_ponyta_galar_test() {
       "https://pokeapi.co/api/v2/pokemon-form/10321/",
     ),
   ])
+  ponyta_galar.game_indices
+  |> list.length
+  |> should.equal(0)
   ponyta_galar.height
   |> should.equal(8)
   ponyta_galar.id
@@ -134,6 +147,9 @@ pub fn decode_tinkaton_test() {
   |> should.equal([
     generic.Resource("tinkaton", "https://pokeapi.co/api/v2/pokemon-form/959/"),
   ])
+  tinkaton.game_indices
+  |> list.length
+  |> should.equal(0)
   tinkaton.height
   |> should.equal(7)
   tinkaton.id
