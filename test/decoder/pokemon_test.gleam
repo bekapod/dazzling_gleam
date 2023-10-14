@@ -59,6 +59,24 @@ pub fn decode_ponyta_galar_test() {
   let assert Ok(ponyta_galar_json) = simplifile.read(filepath)
   let assert Ok(ponyta_galar) = pokemon.decode(ponyta_galar_json)
 
+  ponyta_galar.abilities
+  |> should.equal([
+    pokemon.PokemonAbility(
+      generic.Resource("run-away", "https://pokeapi.co/api/v2/ability/50/"),
+      False,
+      1,
+    ),
+    pokemon.PokemonAbility(
+      generic.Resource("pastel-veil", "https://pokeapi.co/api/v2/ability/257/"),
+      False,
+      2,
+    ),
+    pokemon.PokemonAbility(
+      generic.Resource("anticipation", "https://pokeapi.co/api/v2/ability/107/"),
+      True,
+      3,
+    ),
+  ])
   ponyta_galar.base_experience
   |> should.equal(option.Some(82))
   ponyta_galar.height
@@ -82,6 +100,24 @@ pub fn decode_tinkaton_test() {
   let assert Ok(tinkaton_json) = simplifile.read(filepath)
   let assert Ok(tinkaton) = pokemon.decode(tinkaton_json)
 
+  tinkaton.abilities
+  |> should.equal([
+    pokemon.PokemonAbility(
+      generic.Resource("mold-breaker", "https://pokeapi.co/api/v2/ability/104/"),
+      False,
+      1,
+    ),
+    pokemon.PokemonAbility(
+      generic.Resource("own-tempo", "https://pokeapi.co/api/v2/ability/20/"),
+      False,
+      2,
+    ),
+    pokemon.PokemonAbility(
+      generic.Resource("pickpocket", "https://pokeapi.co/api/v2/ability/124/"),
+      True,
+      3,
+    ),
+  ])
   tinkaton.base_experience
   |> should.equal(option.None)
   tinkaton.height
