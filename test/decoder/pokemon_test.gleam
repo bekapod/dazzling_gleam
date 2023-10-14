@@ -35,9 +35,12 @@ pub fn decode_jigglypuff_test() {
       3,
     ),
   ])
-
   jigglypuff.base_experience
   |> should.equal(option.Some(95))
+  jigglypuff.forms
+  |> should.equal([
+    generic.Resource("jigglypuff", "https://pokeapi.co/api/v2/pokemon-form/39/"),
+  ])
   jigglypuff.height
   |> should.equal(5)
   jigglypuff.id
@@ -79,6 +82,13 @@ pub fn decode_ponyta_galar_test() {
   ])
   ponyta_galar.base_experience
   |> should.equal(option.Some(82))
+  ponyta_galar.forms
+  |> should.equal([
+    generic.Resource(
+      "ponyta-galar",
+      "https://pokeapi.co/api/v2/pokemon-form/10321/",
+    ),
+  ])
   ponyta_galar.height
   |> should.equal(8)
   ponyta_galar.id
@@ -120,6 +130,10 @@ pub fn decode_tinkaton_test() {
   ])
   tinkaton.base_experience
   |> should.equal(option.None)
+  tinkaton.forms
+  |> should.equal([
+    generic.Resource("tinkaton", "https://pokeapi.co/api/v2/pokemon-form/959/"),
+  ])
   tinkaton.height
   |> should.equal(7)
   tinkaton.id

@@ -13,6 +13,7 @@ pub type Pokemon {
   Pokemon(
     abilities: List(PokemonAbility),
     base_experience: option.Option(Int),
+    forms: List(Resource),
     height: Int,
     id: Int,
     is_default: Bool,
@@ -44,6 +45,11 @@ pub fn decode(json_string: String) -> Result(Pokemon, errors.DecodeError) {
   use base_experience <- result.try(
     dyn
     |> field("base_experience", of: optional(int))
+    |> result.map_error(with: fn(error) { errors.FieldErrors(error) }),
+  )
+  use forms <- result.try(
+    dyn
+    |> field("forms", of: list(resource))
     |> result.map_error(with: fn(error) { errors.FieldErrors(error) }),
   )
   use height <- result.try(
@@ -85,6 +91,7 @@ pub fn decode(json_string: String) -> Result(Pokemon, errors.DecodeError) {
   Ok(Pokemon(
     abilities: abilities,
     base_experience: base_experience,
+    forms: forms,
     height: height,
     id: id,
     is_default: is_default,
