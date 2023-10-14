@@ -1,6 +1,8 @@
 import gleam/dynamic.{bool, field, int, list, optional, string}
 import gleam/json
 import gleam/option
+import gleam/result
+import decoder/errors
 import decoder/generic.{Resource}
 
 pub type PokemonAbility {
@@ -21,7 +23,7 @@ pub type Pokemon {
   )
 }
 
-pub fn decode(json_string: String) -> Result(Pokemon, json.DecodeError) {
+pub fn decode(json_string: String) -> Result(Pokemon, errors.DecodeError) {
   let resource = generic.make_resource_decoder()
   let pokemon_ability =
     dynamic.decode3(
@@ -30,20 +32,65 @@ pub fn decode(json_string: String) -> Result(Pokemon, json.DecodeError) {
       field("is_hidden", of: bool),
       field("slot", of: int),
     )
+  use dyn <- result.try(
+    json.decode(json_string, dynamic.dynamic)
+    |> result.map_error(fn(error) { errors.ParseError(error) }),
+  )
+  use abilities <- result.try(
+    dyn
+    |> field("abilities", of: list(pokemon_ability))
+    |> result.map_error(with: fn(error) { errors.FieldErrors(error) }),
+  )
+  use base_experience <- result.try(
+    dyn
+    |> field("base_experience", of: optional(int))
+    |> result.map_error(with: fn(error) { errors.FieldErrors(error) }),
+  )
+  use height <- result.try(
+    dyn
+    |> field("height", of: int)
+    |> result.map_error(with: fn(error) { errors.FieldErrors(error) }),
+  )
+  use id <- result.try(
+    dyn
+    |> field("id", of: int)
+    |> result.map_error(with: fn(error) { errors.FieldErrors(error) }),
+  )
+  use is_default <- result.try(
+    dyn
+    |> field("is_default", of: bool)
+    |> result.map_error(with: fn(error) { errors.FieldErrors(error) }),
+  )
+  use location_area_encounters <- result.try(
+    dyn
+    |> field("location_area_encounters", of: string)
+    |> result.map_error(with: fn(error) { errors.FieldErrors(error) }),
+  )
+  use name <- result.try(
+    dyn
+    |> field("name", of: string)
+    |> result.map_error(with: fn(error) { errors.FieldErrors(error) }),
+  )
+  use order <- result.try(
+    dyn
+    |> field("order", of: int)
+    |> result.map_error(with: fn(error) { errors.FieldErrors(error) }),
+  )
+  use weight <- result.try(
+    dyn
+    |> field("weight", of: int)
+    |> result.map_error(with: fn(error) { errors.FieldErrors(error) }),
+  )
 
-  let pokemon_decoder =
-    dynamic.decode9(
-      Pokemon,
-      field("abilities", of: list(pokemon_ability)),
-      field("base_experience", of: optional(int)),
-      field("height", of: int),
-      field("id", of: int),
-      field("is_default", of: bool),
-      field("location_area_encounters", of: string),
-      field("name", of: string),
-      field("order", of: int),
-      field("weight", of: int),
-    )
-
-  json.decode(json_string, pokemon_decoder)
+  Ok(Pokemon(
+    abilities: abilities,
+    base_experience: base_experience,
+    height: height,
+    id: id,
+    is_default: is_default,
+    location_area_encounters: location_area_encounters,
+    name: name,
+    order: order,
+    weight: weight,
+  ))
 }
