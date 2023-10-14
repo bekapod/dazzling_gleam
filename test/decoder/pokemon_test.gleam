@@ -1,6 +1,9 @@
 import gleeunit
 import gleeunit/should
+import gleam/dynamic
+import gleam/json
 import gleam/option
+import decoder/errors
 import decoder/generic
 import decoder/pokemon
 import simplifile
@@ -95,4 +98,50 @@ pub fn decode_tinkaton_test() {
   |> should.equal(1002)
   tinkaton.weight
   |> should.equal(1128)
+}
+
+pub fn decode_invalid_json_test() {
+  let assert Error(error) = pokemon.decode("invalid json")
+  let assert errors.ParseError(json_error) = error
+  let assert json.UnexpectedByte(_, _) = json_error
+}
+
+pub fn decode_missing_id_test() {
+  let filepath = "./test/decoder/fixtures/pokemon/tinkaton-missing-id.json"
+  let assert Ok(tinkaton_json) = simplifile.read(filepath)
+  let assert Error(error) = pokemon.decode(tinkaton_json)
+  let assert errors.FieldErrors(field_errors) = error
+
+  field_errors
+  |> should.equal([
+    dynamic.DecodeError(expected: "field", found: "nothing", path: ["id"]),
+  ])
+}
+
+pub fn decode_invalid_name_test() {
+  let filepath = "./test/decoder/fixtures/pokemon/tinkaton-invalid-name.json"
+  let assert Ok(tinkaton_json) = simplifile.read(filepath)
+  let assert Error(error) = pokemon.decode(tinkaton_json)
+  let assert errors.FieldErrors(field_errors) = error
+
+  field_errors
+  |> should.equal([
+    dynamic.DecodeError(expected: "String", found: "Int", path: ["name"]),
+  ])
+}
+
+pub fn decode_invalid_ability_test() {
+  let filepath = "./test/decoder/fixtures/pokemon/tinkaton-invalid-ability.json"
+  let assert Ok(tinkaton_json) = simplifile.read(filepath)
+  let assert Error(error) = pokemon.decode(tinkaton_json)
+  let assert errors.FieldErrors(field_errors) = error
+
+  field_errors
+  |> should.equal([
+    dynamic.DecodeError(
+      expected: "Bool",
+      found: "Int",
+      path: ["abilities", "*", "is_hidden"],
+    ),
+  ])
 }
